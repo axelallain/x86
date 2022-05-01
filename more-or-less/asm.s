@@ -2,7 +2,7 @@ section .data
 	message db "Hello, World!",10
 	more db "More",10
 	less db "Less",10
-	victory db 0x0
+	victory db 0x1
 	number db 0x5
 
 section .bss
@@ -12,14 +12,15 @@ section .text
 	global _start
 
 _start:
-	gameloop:
+	_gameloop:
 	mov eax, [victory]	
-	cmp eax, 1
-	jmp askguess
-	jmp clue
-	jmp gameloop
+	cmp eax, 0x1
+	je _end
+	call _askguess
+	call _clue
+	call _gameloop
 
-	askguess:
+	_askguess:
 	mov eax, 3
 	mov ebx, 0
 	mov ecx, guess
@@ -27,23 +28,15 @@ _start:
 	int 0x80
 	ret
 
-	clue:
+	_clue:
 	mov eax, [guess]
 	cmp eax, [number]
-	je end
-	jg less
-	jl more
+	je _end
+	jl _msgmore
+	jg _msgless
 	ret
 
-	msgless:
-	mov eax, 4
-	mov ebx, 1
-	mov ecx, less
-	mov edx, 5
-	int 0x80
-	ret
-
-	msgmore:
+	_msgmore:
 	mov eax, 4
 	mov ebx, 1
 	mov ecx, more
@@ -51,7 +44,16 @@ _start:
 	int 0x80
 	ret
 
-	end:
+	_msgless:
+	mov eax, 4
+	mov ebx, 1
+	mov ecx, less
+	mov edx, 5
+	int 0x80
+	ret
+
+
+	_end:
 	mov ebx, 0
 	mov eax, 1
 	int 0x80
