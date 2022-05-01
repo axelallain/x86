@@ -1,5 +1,4 @@
 section .data
-	message db "Hello, World!",10
 	more db "More",10
 	less db "Less",10
 	victoryboolean db 0x0
@@ -36,7 +35,8 @@ _start:
 	ret
 
 	_victory:
-	mov eax, 0x1
+	mov eax, [victoryboolean]
+	inc eax
 	ret
 
 	_msgmore:
@@ -54,7 +54,6 @@ _start:
 	mov edx, 5
 	int 0x80
 	ret
-
 
 	_end:
 	mov ebx, 0
