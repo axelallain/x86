@@ -2,23 +2,22 @@ section .data
 	message db "Hello, World!",10
 	more db "More",10
 	less db "Less",10
-	victory db 0x1
-	number db 0x5
+	victoryboolean db 0x0
 
 section .bss
-	guess resb 16
+	guess resb 4
 
 section .text
 	global _start
 
 _start:
 	_gameloop:
-	mov eax, [victory]	
+	mov eax, [victoryboolean]	
 	cmp eax, 0x1
 	je _end
 	call _askguess
 	call _clue
-	call _gameloop
+	jmp _gameloop
 
 	_askguess:
 	mov eax, 3
@@ -30,10 +29,14 @@ _start:
 
 	_clue:
 	mov eax, [guess]
-	cmp eax, [number]
-	je _end
+	cmp eax, 0x5
+	je _victory
 	jl _msgmore
 	jg _msgless
+	ret
+
+	_victory:
+	mov eax, 0x1
 	ret
 
 	_msgmore:
