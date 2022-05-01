@@ -1,14 +1,12 @@
 section .data
-	message db "Hello, World!",0xa
+	message db "Hello, World!",10
 
 section .text
 	global _start
 
 _start:
-	mov edx, 14
-	mov ecx, message
 	mov ebx, 1
-	mov eax, 4
+	shl ebx, 1 
 	int 0x80
 
 	mov ebx, 0
